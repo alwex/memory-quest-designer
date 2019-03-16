@@ -4,12 +4,14 @@ import { PortWidget } from 'storm-react-diagrams'
 
 export interface StoryNodeWidgetProps {
   node: StoryNodeModel
-  size?: number
 }
 
 export interface StoryNodeWidgetState { }
 
-export class StoryNodeWidget extends React.Component<StoryNodeWidgetProps, StoryNodeWidgetState> {
+export class StoryNodeWidget extends React.Component<
+  StoryNodeWidgetProps,
+  StoryNodeWidgetState
+  > {
 
   constructor(props: StoryNodeWidgetProps) {
     super(props)
@@ -36,7 +38,7 @@ export class StoryNodeWidget extends React.Component<StoryNodeWidgetProps, Story
           <div className='form-group'>
             <input className='form-control' type='text' defaultValue='Story title' />
           </div>
-          <div className='form-group'>
+          <div className='form-group mb-0'>
             <textarea className='form-control' rows={5} defaultValue='this is the story' />
           </div>
         </div>

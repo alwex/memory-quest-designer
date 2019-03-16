@@ -1,12 +1,11 @@
-import * as SRD from 'storm-react-diagrams'
-import { NodeModel, Toolkit } from 'storm-react-diagrams'
-import { StoryPortModel } from './StoryPortModel';
+import { NodeModel } from 'storm-react-diagrams'
+import { CustomPortModel } from '../CustomPortModel';
 
 export class StoryNodeModel extends NodeModel {
   constructor() {
-    super("story")
-    this.addPort(new StoryPortModel('top'))
-    this.addPort(new StoryPortModel('bottom-left'))
-    this.addPort(new StoryPortModel('bottom-right'))
+    super('story')
+    this.addPort(new CustomPortModel('top'))
+    this.addPort(new CustomPortModel('bottom-left'))
+    this.addPort(new CustomPortModel('bottom-right'))
   }
 }

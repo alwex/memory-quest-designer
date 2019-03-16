@@ -6,8 +6,8 @@ import {
   DefaultLinkModel,
 } from 'storm-react-diagrams'
 
-export class StoryPortModel extends PortModel {
-  position: string | 'bottom-left' | 'bottom-right' | 'top'
+export class CustomPortModel extends PortModel {
+  position: string | 'bottom' | 'bottom-left' | 'bottom-right' | 'top'
 
   constructor(pos: string = "top") {
     super(pos, "story")

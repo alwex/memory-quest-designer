@@ -13,9 +13,7 @@ const hydrateModel = (dbData: any, nodeModel: any) => {
   for (let attr in dbData) {
     nodeModel[`db${capitalize(attr)}`] = dbData[attr]
   }
-
-  nodeModel.setPosition(0, (nodeModel.dbPosition - 1) * 600)
-
+  nodeModel.setPosition(dbData.x, dbData.y)
   return nodeModel
 }
 
@@ -54,6 +52,7 @@ export class Api {
   }
 
   private static async saveModel(modelType: string, data: any) {
+    console.log(data)
     const id = data.id
     const toSave = { ...data }
     if (id) {

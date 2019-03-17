@@ -3,6 +3,7 @@ import { StoryNodeModel } from './StoryNodeModel'
 import { PortWidget } from 'storm-react-diagrams'
 import { Api } from '../../utils/api';
 import { DBStory } from '../../utils/db-models';
+import { node } from 'prop-types';
 
 export interface StoryNodeWidgetProps {
   node: StoryNodeModel
@@ -27,12 +28,20 @@ export class StoryNodeWidget extends React.Component<
       story: node.dbStory,
       condition_1: node.dbCondition_1,
       condition_2: node.dbCondition_2,
+      x: node.dbX,
+      y: node.dbY,
     }
   }
 
   async save() {
-    const response = await Api.saveStory(this.state)
-    this.setState({ id: response.id })
+    const { node } = this.props
+    this.setState({
+      x: node.x,
+      y: node.y,
+    }, async () => {
+      const response = await Api.saveStory(this.state)
+      this.setState({ id: response.id })
+    })
   }
 
   remove() {

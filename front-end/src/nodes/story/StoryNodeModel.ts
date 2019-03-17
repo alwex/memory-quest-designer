@@ -9,6 +9,8 @@ export class StoryNodeModel extends NodeModel {
   public dbStory?: string
   public dbCondition_1?: string
   public dbCondition_2?: string
+  public dbX?: number
+  public dbY?: number
 
   constructor() {
     super('story')

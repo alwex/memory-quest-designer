@@ -4,6 +4,7 @@ export interface DBStory {
   story?: string
   condition_1?: string
   condition_2?: string
-  position?: number
+  x?: number
+  y?: number
   [key: string]: any
 }

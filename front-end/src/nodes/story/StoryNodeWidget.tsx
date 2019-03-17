@@ -11,6 +11,7 @@ export interface StoryNodeWidgetProps {
 }
 
 export interface StoryNodeWidgetState extends DBStory {
+  dirty: boolean
 }
 
 export class StoryNodeWidget extends React.Component<
@@ -22,6 +23,7 @@ export class StoryNodeWidget extends React.Component<
     super(props)
     const { node } = props
     this.state = {
+      dirty: false,
       id: node.dbId,
       position: node.dbPosition,
       title: node.dbTitle,
@@ -40,7 +42,7 @@ export class StoryNodeWidget extends React.Component<
       y: node.y,
     }, async () => {
       const response = await Api.saveStory(this.state)
-      this.setState({ id: response.id })
+      this.setState({ dirty: false, id: response.id })
     })
   }
 
@@ -52,6 +54,7 @@ export class StoryNodeWidget extends React.Component<
 
   handleChange(event: React.SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>) {
     this.setState({
+      dirty: true,
       [event.currentTarget.name]: event.currentTarget.value
     })
   }
@@ -120,7 +123,9 @@ export class StoryNodeWidget extends React.Component<
               <button type='button' className='btn btn-outline-danger btn-block' onClick={() => this.remove()}>Remove</button>
             </div>
             <div className='col'>
-              <button type='button' className='btn btn-primary btn-block' onClick={() => this.save()}>Save</button>
+              {this.state.dirty &&
+                <button type='button' className='btn btn-primary btn-block' onClick={() => this.save()}>Save</button>
+              }
             </div>
           </div>
           <div

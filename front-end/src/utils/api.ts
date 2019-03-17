@@ -52,9 +52,9 @@ export class Api {
   }
 
   private static async saveModel(modelType: string, data: any) {
-    console.log(data)
     const id = data.id
     const toSave = { ...data }
+    delete toSave['dirty']
     if (id) {
       delete toSave['id']
       return Api.put(`${endpoint}/${modelType}/${id}`, toSave)

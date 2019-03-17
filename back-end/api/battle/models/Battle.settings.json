@@ -1,0 +1,33 @@
+{
+  "connection": "default",
+  "collectionName": "battles",
+  "info": {
+    "name": "battle",
+    "description": "battle"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "title": {
+      "default": "",
+      "type": "string"
+    },
+    "enemy_name": {
+      "default": "",
+      "type": "string"
+    },
+    "image": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload",
+      "required": false
+    },
+    "position": {
+      "default": "",
+      "type": "integer"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "connection": "default",
+  "collectionName": "stories",
+  "info": {
+    "name": "story",
+    "description": "story model"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "title": {
+      "default": "",
+      "type": "string"
+    },
+    "story": {
+      "default": "",
+      "type": "text"
+    },
+    "condition_1": {
+      "default": "",
+      "type": "string"
+    },
+    "condition_2": {
+      "default": "",
+      "type": "string"
+    },
+    "position": {
+      "default": "",
+      "type": "integer"
+    }
+  }
+}

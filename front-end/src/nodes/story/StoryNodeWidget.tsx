@@ -1,12 +1,16 @@
 import * as React from 'react'
 import { StoryNodeModel } from './StoryNodeModel'
 import { PortWidget } from 'storm-react-diagrams'
+import { Api } from '../../utils/api';
+import { DBStory } from '../../utils/db-models';
 
 export interface StoryNodeWidgetProps {
   node: StoryNodeModel
+  updateCanvas: () => void
 }
 
-export interface StoryNodeWidgetState { }
+export interface StoryNodeWidgetState extends DBStory {
+}
 
 export class StoryNodeWidget extends React.Component<
   StoryNodeWidgetProps,
@@ -15,10 +19,36 @@ export class StoryNodeWidget extends React.Component<
 
   constructor(props: StoryNodeWidgetProps) {
     super(props)
-    this.state = {}
+    const { node } = props
+    this.state = {
+      id: node.dbId,
+      position: node.dbPosition,
+      title: node.dbTitle,
+      story: node.dbStory,
+      condition_1: node.dbCondition_1,
+      condition_2: node.dbCondition_2,
+    }
+  }
+
+  async save() {
+    const response = await Api.saveStory(this.state)
+    this.setState({ id: response.id })
+  }
+
+  remove() {
+    Api.deleteStory(this.state)
+    this.props.node.remove()
+    this.props.updateCanvas()
+  }
+
+  handleChange(event: React.SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    this.setState({
+      [event.currentTarget.name]: event.currentTarget.value
+    })
   }
 
   render() {
+    const { state } = this
     return (
       <div
         className={'story-node card'}
@@ -36,19 +66,52 @@ export class StoryNodeWidget extends React.Component<
         />
         <div className='card-body'>
           <div className='form-group'>
-            <input className='form-control' type='text' defaultValue='Story title' />
+            <input
+              className='form-control'
+              type='text'
+              name='title'
+              value={state.title}
+              onChange={(event) => this.handleChange(event)}
+            />
           </div>
-          <div className='form-group mb-0'>
-            <textarea className='form-control' rows={5} defaultValue='this is the story' />
+          <div className='form-group'>
+            <textarea
+              className='form-control'
+              rows={5}
+              name='story'
+              value={state.story}
+              onChange={(event) => this.handleChange(event)}
+            />
+          </div>
+          <div className='form-row'>
+            <div className='col'>
+              <input
+                className='form-control'
+                type='text'
+                name='condition_1'
+                value={state.condition_1 || ''}
+                onChange={(event) => this.handleChange(event)}
+              />
+            </div>
+
+            <div className='col'>
+              <input
+                className='form-control'
+                type='text'
+                name='condition_2'
+                value={state.condition_2 || ''}
+                onChange={(event) => this.handleChange(event)}
+              />
+            </div>
           </div>
         </div>
         <div className='card-footer text-muted mb-2'>
           <div className='form-row'>
             <div className='col'>
-              <input className='form-control' type='text' defaultValue='Cond 1' />
+              <button type='button' className='btn btn-outline-danger btn-block' onClick={() => this.remove()}>Remove</button>
             </div>
             <div className='col'>
-              <input className='form-control' type='text' defaultValue='Cond 2' />
+              <button type='button' className='btn btn-primary btn-block' onClick={() => this.save()}>Save</button>
             </div>
           </div>
           <div

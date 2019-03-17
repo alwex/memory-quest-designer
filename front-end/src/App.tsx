@@ -7,36 +7,30 @@ import { DiagramEngine, DiagramProps } from 'storm-react-diagrams'
 
 // custom nodes
 import { StoryNodeModel } from './nodes/story/StoryNodeModel'
-import { StoryNodeFactory } from './nodes/story/StoryNodeFactory'
+import { SimpleNodeFactory } from './nodes/SimpleNodeFactory'
 import { CustomPortModel } from './nodes/CustomPortModel';
 import { SimplePortFactory } from './nodes/SimplePortFactory';
 import { BattleNodeFactory } from './nodes/battle/BattleNodeFactory';
 import { BattleNodeModel } from './nodes/battle/BattleNodeModel';
+import { Api } from './utils/api';
 
 class App extends Component {
   engine: DiagramEngine = new DiagramEngine()
 
-  componentDidMount() {
+  async componentDidMount() {
+    const stories = await Api.getStories()
+    console.log(stories)
+
     this.engine.installDefaultFactories()
-    this.engine.registerNodeFactory(new StoryNodeFactory())
+    this.engine.registerNodeFactory(new SimpleNodeFactory('story', () => this.forceUpdate()))
     this.engine.registerNodeFactory(new BattleNodeFactory())
     this.engine.registerPortFactory(new SimplePortFactory("story", config => new CustomPortModel()))
     this.engine.registerPortFactory(new SimplePortFactory("battle", config => new CustomPortModel()))
 
     const model = new SRD.DiagramModel()
     model.setGridSize(40)
+    model.addAll(...stories)
 
-    const storyNode1 = new StoryNodeModel()
-    storyNode1.setPosition(40, 40)
-    const portStory1 = storyNode1.getPort('bottom-left') as CustomPortModel
-
-    const storyNode2 = new StoryNodeModel()
-    storyNode2.setPosition(40, 800)
-    const portStory2 = storyNode2.getPort('top') as CustomPortModel
-
-    const link = portStory1.link(portStory2)
-
-    model.addAll(storyNode1, storyNode2, link)
     this.engine.setDiagramModel(model)
     this.engine.zoomToFit()
   }
@@ -76,6 +70,7 @@ class App extends Component {
             <a className="list-group-item list-group-item-action">Add a Challenge</a>
           </div>
         </nav>
+
 
         <main id='content'>
           <div className='container-fluid'>

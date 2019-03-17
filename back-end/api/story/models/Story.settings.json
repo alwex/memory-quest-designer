@@ -27,7 +27,11 @@
       "default": "",
       "type": "string"
     },
-    "position": {
+    "x": {
+      "default": "",
+      "type": "integer"
+    },
+    "y": {
       "default": "",
       "type": "integer"
     }

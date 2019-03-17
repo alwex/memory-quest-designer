@@ -532,7 +532,11 @@
             "type": "string",
             "default": ""
           },
-          "position": {
+          "x": {
+            "type": "integer",
+            "default": ""
+          },
+          "y": {
             "type": "integer",
             "default": ""
           }
@@ -556,7 +560,11 @@
             "type": "string",
             "default": ""
           },
-          "position": {
+          "x": {
+            "type": "integer",
+            "default": ""
+          },
+          "y": {
             "type": "integer",
             "default": ""
           }

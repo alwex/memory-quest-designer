@@ -16,6 +16,7 @@ import { Api } from './utils/api';
 
 class App extends Component {
   engine: DiagramEngine = new DiagramEngine()
+  model: SRD.DiagramModel = new SRD.DiagramModel()
 
   async componentDidMount() {
     const stories = await Api.getStories()
@@ -27,11 +28,18 @@ class App extends Component {
     this.engine.registerPortFactory(new SimplePortFactory("story", config => new CustomPortModel()))
     this.engine.registerPortFactory(new SimplePortFactory("battle", config => new CustomPortModel()))
 
-    const model = new SRD.DiagramModel()
-    model.setGridSize(40)
-    model.addAll(...stories)
+    this.model.setGridSize(40)
+    this.model.addAll(...stories)
+    this.model.addListener({
+      linksUpdated: (event) => {
+        console.log(event)
+      }
+    })
 
-    this.engine.setDiagramModel(model)
+    console.log(this.model.getNodes())
+    console.log(this.model.getLinks())
+
+    this.engine.setDiagramModel(this.model)
     this.engine.zoomToFit()
   }
 
@@ -47,6 +55,14 @@ class App extends Component {
     battleNode.setPosition(40, 40);
     this.engine.getDiagramModel().addAll(battleNode)
     this.forceUpdate()
+  }
+
+  async saveAll() {
+    const allNodes = this.model.getNodes()
+    for (const nodeId in allNodes) {
+      const node = allNodes[nodeId]
+      await Api.saveModel(node)
+    }
   }
 
   render() {
@@ -68,6 +84,8 @@ class App extends Component {
             <a className="list-group-item list-group-item-action" onClick={() => this.addStory()}>Add a Story</a>
             <a className="list-group-item list-group-item-action" onClick={() => this.addBattle()}>Add a Battle</a>
             <a className="list-group-item list-group-item-action">Add a Challenge</a>
+            <a className="list-group-item list-group-item-action" onClick={() => this.saveAll()}>Save</a>
+
           </div>
         </nav>
 

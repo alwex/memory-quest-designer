@@ -1,9 +1,9 @@
-import * as React from 'react'
+import React from 'react'
 import { StoryNodeModel } from './StoryNodeModel'
 import { PortWidget } from 'storm-react-diagrams'
-import { Api } from '../../utils/api';
-import { DBStory } from '../../utils/db-models';
-import { node } from 'prop-types';
+import { Api } from '../../utils/api'
+import { DBStory } from '../../utils/db-models'
+import { hydrateModel } from '../../utils/api'
 
 export interface StoryNodeWidgetProps {
   node: StoryNodeModel
@@ -11,7 +11,6 @@ export interface StoryNodeWidgetProps {
 }
 
 export interface StoryNodeWidgetState extends DBStory {
-  dirty: boolean
 }
 
 export class StoryNodeWidget extends React.Component<
@@ -23,39 +22,29 @@ export class StoryNodeWidget extends React.Component<
     super(props)
     const { node } = props
     this.state = {
-      dirty: false,
       id: node.dbId,
-      position: node.dbPosition,
       title: node.dbTitle,
       story: node.dbStory,
       condition_1: node.dbCondition_1,
       condition_2: node.dbCondition_2,
-      x: node.dbX,
-      y: node.dbY,
     }
   }
 
-  async save() {
-    const { node } = this.props
-    this.setState({
-      x: node.x,
-      y: node.y,
-    }, async () => {
-      const response = await Api.saveStory(this.state)
-      this.setState({ dirty: false, id: response.id })
-    })
+  syncModel() {
+    hydrateModel(this.state, this.props.node);
   }
 
   remove() {
-    Api.deleteStory(this.state)
+    Api.deleteModel(this.props.node)
     this.props.node.remove()
     this.props.updateCanvas()
   }
 
   handleChange(event: React.SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>) {
     this.setState({
-      dirty: true,
       [event.currentTarget.name]: event.currentTarget.value
+    }, () => {
+      this.syncModel()
     })
   }
 
@@ -121,11 +110,6 @@ export class StoryNodeWidget extends React.Component<
           <div className='form-row'>
             <div className='col'>
               <button type='button' className='btn btn-outline-danger btn-block' onClick={() => this.remove()}>Remove</button>
-            </div>
-            <div className='col'>
-              {this.state.dirty &&
-                <button type='button' className='btn btn-primary btn-block' onClick={() => this.save()}>Save</button>
-              }
             </div>
           </div>
           <div

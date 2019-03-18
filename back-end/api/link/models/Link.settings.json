@@ -1,0 +1,31 @@
+{
+  "connection": "default",
+  "collectionName": "links",
+  "info": {
+    "name": "link",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "in_type": {
+      "default": "",
+      "type": "string"
+    },
+    "in_id": {
+      "default": "",
+      "type": "integer"
+    },
+    "out_type": {
+      "default": "",
+      "type": "string"
+    },
+    "out_id": {
+      "default": "",
+      "type": "integer"
+    }
+  }
+}

@@ -1,5 +1,7 @@
 import { StoryNodeModel } from "../nodes/story/StoryNodeModel";
 import { DBStory } from "./db-models";
+import { serializeDbFields } from "./utils";
+import pluralize from 'pluralize'
 
 // ================================================================================
 // Helpers
@@ -9,12 +11,30 @@ const capitalize = (s: string) => {
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
-const hydrateModel = (dbData: any, nodeModel: any) => {
+export const hydrateModel = (dbData: any, nodeModel: any) => {
   for (let attr in dbData) {
     nodeModel[`db${capitalize(attr)}`] = dbData[attr]
   }
   nodeModel.setPosition(dbData.x, dbData.y)
   return nodeModel
+}
+
+const sanitizeDataBeforeSave = (data: any) => {
+  let serializedDbFields: any = serializeDbFields(data)
+  for (const attr in serializedDbFields) {
+    console.log(attr)
+    serializedDbFields[attr.toLowerCase().replace('db', '')] = serializedDbFields[attr]
+    delete serializedDbFields[attr]
+  }
+  const sanitized: any = {
+    ...serializedDbFields,
+    x: data.x,
+    y: data.y,
+  }
+
+  delete sanitized['id']
+
+  return sanitized
 }
 
 const endpoint = 'http://localhost:1337';
@@ -51,20 +71,23 @@ export class Api {
     return await Api.get(`${endpoint}/${modelType}`)
   }
 
-  private static async saveModel(modelType: string, data: any) {
-    const id = data.id
-    const toSave = { ...data }
-    delete toSave['dirty']
+  public static async saveModel(data: any) {
+    const modelType = pluralize(data.type)
+    const id = data.dbId
+    const toSave = sanitizeDataBeforeSave(data)
+
     if (id) {
-      delete toSave['id']
       return Api.put(`${endpoint}/${modelType}/${id}`, toSave)
     } else {
       return Api.post(`${endpoint}/${modelType}`, toSave)
     }
   }
 
-  private static async deleteModel(modelType: string, data: any) {
-    return await Api.delete(`${endpoint}/${modelType}/${data.id}`)
+  public static async deleteModel(data: any) {
+    console.log(data)
+    const modelType = pluralize(data.type)
+    const id = data.dbId
+    return await Api.delete(`${endpoint}/${modelType}/${id}`)
   }
 
   // ================================================================================
@@ -80,12 +103,12 @@ export class Api {
   }
 
   public static async saveStory(story: DBStory) {
-    const response = await Api.saveModel(`stories`, story)
+    const response = await Api.saveModel(story)
     return await response.json()
   }
 
   public static async deleteStory(story: DBStory) {
-    const response = await Api.deleteModel(`stories`, story)
+    const response = await Api.deleteModel(story)
     return await response.json()
   }
 }

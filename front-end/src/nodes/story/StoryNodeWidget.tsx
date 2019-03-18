@@ -1,63 +1,34 @@
 import React from 'react'
 import { StoryNodeModel } from './StoryNodeModel'
 import { PortWidget } from 'storm-react-diagrams'
-import { Api } from '../../utils/api'
-import { DBStory } from '../../utils/db-models'
-import { hydrateModel } from '../../utils/api'
+import { NodeContainer } from './NodeContainer';
+import { SyncableNode, SyncableNodeProps, SyncableNodeState } from './SyncableNode';
+import { DBNodeModel } from './DBNodeModel';
 
-export interface StoryNodeWidgetProps {
+export interface StoryNodeWidgetProps extends SyncableNodeProps {
   node: StoryNodeModel
-  updateCanvas: () => void
 }
 
-export interface StoryNodeWidgetState extends DBStory {
+export interface StoryNodeWidgetState extends SyncableNodeState {
 }
 
-export class StoryNodeWidget extends React.Component<
+export class StoryNodeWidget extends SyncableNode<
   StoryNodeWidgetProps,
   StoryNodeWidgetState
   > {
 
   constructor(props: StoryNodeWidgetProps) {
     super(props)
-    const { node } = props
+    const node = this.props.node as DBNodeModel
     this.state = {
-      id: node.dbId,
-      title: node.dbTitle,
-      story: node.dbStory,
-      condition_1: node.dbCondition_1,
-      condition_2: node.dbCondition_2,
+      ...node.db
     }
-  }
-
-  syncModel() {
-    hydrateModel(this.state, this.props.node);
-  }
-
-  remove() {
-    Api.deleteModel(this.props.node)
-    this.props.node.remove()
-    this.props.updateCanvas()
-  }
-
-  handleChange(event: React.SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    this.setState({
-      [event.currentTarget.name]: event.currentTarget.value
-    }, () => {
-      this.syncModel()
-    })
   }
 
   render() {
     const { state } = this
     return (
-      <div
-        className={'story-node card'}
-        style={{
-          position: 'relative',
-          width: 300,
-        }}
-      >
+      <NodeContainer>
         <img
           className='card-img-top non-drag'
           src='http://mooc.politechnicart.net/etudiantsvswild/wp-content/uploads/sites/38/jungle_655_max.jpg'
@@ -94,7 +65,6 @@ export class StoryNodeWidget extends React.Component<
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
-
             <div className='col'>
               <input
                 className='form-control'
@@ -143,7 +113,7 @@ export class StoryNodeWidget extends React.Component<
             <PortWidget name='bottom-right' node={this.props.node} />
           </div>
         </div>
-      </div>
+      </NodeContainer>
     )
   }
 }

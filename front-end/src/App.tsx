@@ -4,7 +4,8 @@ import "storm-react-diagrams/dist/style.min.css"
 import './App.css'
 import * as SRD from 'storm-react-diagrams'
 import { DiagramEngine, DiagramProps } from 'storm-react-diagrams'
-
+import { saveModel } from './utils/repository'
+import { Api } from './utils/api';
 // custom nodes
 import { StoryNodeModel } from './nodes/story/StoryNodeModel'
 import { SimpleNodeFactory } from './nodes/SimpleNodeFactory'
@@ -12,7 +13,7 @@ import { CustomPortModel } from './nodes/CustomPortModel';
 import { SimplePortFactory } from './nodes/SimplePortFactory';
 import { BattleNodeFactory } from './nodes/battle/BattleNodeFactory';
 import { BattleNodeModel } from './nodes/battle/BattleNodeModel';
-import { Api } from './utils/api';
+
 
 class App extends Component {
   engine: DiagramEngine = new DiagramEngine()
@@ -36,9 +37,6 @@ class App extends Component {
       }
     })
 
-    console.log(this.model.getNodes())
-    console.log(this.model.getLinks())
-
     this.engine.setDiagramModel(this.model)
     this.engine.zoomToFit()
   }
@@ -61,7 +59,7 @@ class App extends Component {
     const allNodes = this.model.getNodes()
     for (const nodeId in allNodes) {
       const node = allNodes[nodeId]
-      await Api.saveModel(node)
+      await saveModel(node)
     }
   }
 

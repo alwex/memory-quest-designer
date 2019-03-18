@@ -1,4 +1,8 @@
-export interface DBStory {
+export interface DBModel {
+  [key: string]: any
+}
+
+export interface DBStory extends DBModel {
   id?: number
   title?: string
   story?: string
@@ -6,5 +10,4 @@ export interface DBStory {
   condition_2?: string
   x?: number
   y?: number
-  [key: string]: any
 }

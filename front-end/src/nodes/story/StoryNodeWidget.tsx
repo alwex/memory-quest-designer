@@ -1,9 +1,9 @@
 import React from 'react'
 import { StoryNodeModel } from './StoryNodeModel'
 import { PortWidget } from 'storm-react-diagrams'
-import { NodeContainer } from './NodeContainer';
-import { SyncableNode, SyncableNodeProps, SyncableNodeState } from './SyncableNode';
-import { DBNodeModel } from './DBNodeModel';
+import { NodeContainer } from '../NodeContainer';
+import { SyncableNode, SyncableNodeProps, SyncableNodeState } from '../SyncableNode';
+import { DBNodeModel } from '../DBNodeModel';
 
 export interface StoryNodeWidgetProps extends SyncableNodeProps {
   node: StoryNodeModel

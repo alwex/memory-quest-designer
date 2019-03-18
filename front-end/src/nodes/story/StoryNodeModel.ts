@@ -1,5 +1,6 @@
 import { CustomPortModel } from '../CustomPortModel'
-import { DBNodeModel } from './DBNodeModel';
+import { DBNodeModel } from '../DBNodeModel'
+
 
 export class StoryNodeModel extends DBNodeModel {
 

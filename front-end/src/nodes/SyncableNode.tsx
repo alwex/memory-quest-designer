@@ -1,9 +1,8 @@
 import React from 'react'
 import { BaseModel } from 'storm-react-diagrams';
-import { deleteModel } from '../../utils/repository';
-import { DBModel } from '../../utils/db-models';
-import { DBNodeModel } from './DBNodeModel';
-import { hydrateModel } from '../../utils/utils';
+import { deleteModel } from '../utils/repository';
+import { DBModel } from '../utils/db-models';
+import { hydrateModel } from '../utils/utils';
 
 
 export interface SyncableNodeProps {
